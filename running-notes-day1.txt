@@ -928,3 +928,221 @@ nginx                        latest              6678c7c2e56c        2 weeks ago
 root@dockertest:/home/vagrant# docker container run -d -p 9096:80 adityaprabhakara/mywebsite:2
 1c91508fc7f30158cbf65d8b11885a15d7ed2b7ef64fc663549faae35c44185b
 root@dockertest:/home/vagrant#
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+root@dockertest:/home/vagrant# mkdir pinger
+root@dockertest:/home/vagrant# cd pinger
+root@dockertest:/home/vagrant/pinger# vi Dockerfile
+root@dockertest:/home/vagrant/pinger# cat Dockerfile
+FROM alpine
+RUN apk update && apk add apache2
+root@dockertest:/home/vagrant/pinger# docker image build -f Dockerfile -t al-ap:latest -t al-ap:1
+"docker image build" requires exactly 1 argument(s).
+See 'docker image build --help'.
+
+Usage:  docker image build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+root@dockertest:/home/vagrant/pinger# docker image build -f Dockerfile -t al-ap:latest -t al-ap:1 .
+Sending build context to Docker daemon 2.048 kB
+Step 1/2 : FROM alpine
+latest: Pulling from library/alpine
+aad63a933944: Pull complete
+Digest: sha256:b276d875eeed9c7d3f1cfa7edb06b22ed22b14219a7d67c52c56612330348239
+Status: Downloaded newer image for alpine:latest
+ ---> a187dde48cd2
+Step 2/2 : RUN apk update && apk add apache2
+ ---> Running in 0c1850cd4938
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
+v3.11.5-3-g069a7f047d [http://dl-cdn.alpinelinux.org/alpine/v3.11/main]
+v3.11.5-1-ge59ae1cbad [http://dl-cdn.alpinelinux.org/alpine/v3.11/community]
+OK: 11265 distinct packages available
+(1/6) Installing libuuid (2.34-r1)
+(2/6) Installing apr (1.7.0-r0)
+(3/6) Installing expat (2.2.9-r1)
+(4/6) Installing apr-util (1.6.1-r6)
+(5/6) Installing pcre (8.43-r0)
+(6/6) Installing apache2 (2.4.41-r0)
+Executing apache2-2.4.41-r0.pre-install
+Executing busybox-1.31.1-r9.trigger
+OK: 9 MiB in 20 packages
+ ---> 069e52b49633
+Removing intermediate container 0c1850cd4938
+Successfully built 069e52b49633
+root@dockertest:/home/vagrant/pinger# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+al-ap                        1                   069e52b49633        15 seconds ago      10.8 MB
+al-ap                        latest              069e52b49633        15 seconds ago      10.8 MB
+adityaprabhakara/mywebsite   2                   32c1f81631f8        44 minutes ago      148 MB
+adityaprabhakara/mywebsite   latest              5780686b1b22        2 hours ago         148 MB
+alpine                       latest              a187dde48cd2        34 hours ago        5.6 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant/pinger#
+root@dockertest:/home/vagrant/pinger# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+al-ap                        1                   069e52b49633        2 minutes ago       10.8 MB
+al-ap                        latest              069e52b49633        2 minutes ago       10.8 MB
+adityaprabhakara/mywebsite   2                   32c1f81631f8        47 minutes ago      148 MB
+adityaprabhakara/mywebsite   latest              5780686b1b22        2 hours ago         148 MB
+alpine                       latest              a187dde48cd2        34 hours ago        5.6 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant/pinger# docker container run -d al-ap
+d899e9eb710ac57ab31f59b890480f6da92a1e94960079552f4a412d6f68f61d
+root@dockertest:/home/vagrant/pinger# docker container ls
+CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                  NAMES
+1c91508fc7f3        adityaprabhakara/mywebsite:2   "nginx -g 'daemon ..."   47 minutes ago      Up 47 minutes       0.0.0.0:9096->80/tcp   frosty_kare
+e705b5880878        adityaprabhakara/mywebsite     "nginx -g 'daemon ..."   48 minutes ago      Up 48 minutes       0.0.0.0:9095->80/tcp   objective_minsky
+root@dockertest:/home/vagrant/pinger# docker container rm -f 1c91508fc7f3 e705b5880878
+1c91508fc7f3
+e705b5880878
+root@dockertest:/home/vagrant/pinger# docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+root@dockertest:/home/vagrant/pinger# docker container ls -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                      PORTS               NAMES
+d899e9eb710a        al-ap               "/bin/sh"           36 seconds ago      Exited (0) 35 seconds ago                       lucid_cori
+root@dockertest:/home/vagrant/pinger# vi Dockerfile
+root@dockertest:/home/vagrant/pinger# cat Dockerfile
+FROM alpine
+RUN apk update && apk add apache2
+CMD ping google.com
+root@dockertest:/home/vagrant/pinger# docker image build -f Dockerfile -t al-ap:latest -t al-ap:2 .
+Sending build context to Docker daemon 2.048 kB
+Step 1/3 : FROM alpine
+ ---> a187dde48cd2
+Step 2/3 : RUN apk update && apk add apache2
+ ---> Using cache
+ ---> 069e52b49633
+Step 3/3 : CMD ping google.com
+ ---> Running in e93ebc831e9c
+ ---> bc959fee2834
+Removing intermediate container e93ebc831e9c
+Successfully built bc959fee2834
+root@dockertest:/home/vagrant/pinger# docker image history al-ap:2
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+bc959fee2834        16 seconds ago      /bin/sh -c #(nop)  CMD ["/bin/sh" "-c" "pi...   0 B
+069e52b49633        6 minutes ago       /bin/sh -c apk update && apk add apache2        5.22 MB
+a187dde48cd2        34 hours ago        /bin/sh -c #(nop)  CMD ["/bin/sh"]              0 B
+<missing>           34 hours ago        /bin/sh -c #(nop) ADD file:0c4555f363c2672...   5.6 MB
+root@dockertest:/home/vagrant/pinger# docker container run -d al-ap:2
+ca057a34864fb537982442c5f94438098b750e303f5e5573cab5eeff1be60e52
+root@dockertest:/home/vagrant/pinger# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+ca057a34864f        al-ap:2             "/bin/sh -c 'ping ..."   6 seconds ago       Up 4 seconds                            youthful_hugle
+root@dockertest:/home/vagrant/pinger# vi Dockerfile
+root@dockertest:/home/vagrant/pinger# docker image build -f Dockerfile -t al-ap:latest -t al-ap:3 .
+Sending build context to Docker daemon 2.048 kB
+Step 1/3 : FROM alpine
+ ---> a187dde48cd2
+Step 2/3 : RUN apk update && apk add apache2
+ ---> Using cache
+ ---> 069e52b49633
+Step 3/3 : CMD ping -c20 google.com
+ ---> Running in c15685dd57b1
+ ---> 41a9fc45fa5d
+Removing intermediate container c15685dd57b1
+Successfully built 41a9fc45fa5d
+root@dockertest:/home/vagrant/pinger# docker container run -d al-ap:3
+9aeb45ae69eec14076150979b9c7a061dc2e0230feab6c797c5c6f8acbeaa66a
+root@dockertest:/home/vagrant/pinger# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+9aeb45ae69ee        al-ap:3             "/bin/sh -c 'ping ..."   4 seconds ago       Up 2 seconds                            nostalgic_meninsky
+ca057a34864f        al-ap:2             "/bin/sh -c 'ping ..."   2 minutes ago       Up 2 minutes                            youthful_hugle
+root@dockertest:/home/vagrant/pinger# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+ca057a34864f        al-ap:2             "/bin/sh -c 'ping ..."   2 minutes ago       Up 2 minutes                            youthful_hugle
+root@dockertest:/home/vagrant/pinger# docker container ls -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                      PORTS               NAMES
+9aeb45ae69ee        al-ap:3             "/bin/sh -c 'ping ..."   About a minute ago   Exited (0) 39 seconds ago                       nostalgic_meninsky
+ca057a34864f        al-ap:2             "/bin/sh -c 'ping ..."   2 minutes ago        Up 2 minutes                                    youthful_hugle
+d899e9eb710a        069e52b49633        "/bin/sh"                7 minutes ago        Exited (0) 6 minutes ago                        lucid_cori
+root@dockertest:/home/vagrant/pinger# docker container logs nostalgic_meninsky
+PING google.com (172.217.163.206): 56 data bytes
+64 bytes from 172.217.163.206: seq=0 ttl=53 time=28.951 ms
+64 bytes from 172.217.163.206: seq=1 ttl=53 time=42.356 ms
+64 bytes from 172.217.163.206: seq=2 ttl=53 time=28.188 ms
+64 bytes from 172.217.163.206: seq=3 ttl=53 time=29.689 ms
+64 bytes from 172.217.163.206: seq=4 ttl=53 time=28.052 ms
+64 bytes from 172.217.163.206: seq=5 ttl=53 time=30.358 ms
+64 bytes from 172.217.163.206: seq=6 ttl=53 time=29.640 ms
+64 bytes from 172.217.163.206: seq=7 ttl=53 time=31.133 ms
+64 bytes from 172.217.163.206: seq=8 ttl=53 time=30.838 ms
+64 bytes from 172.217.163.206: seq=9 ttl=53 time=29.772 ms
+64 bytes from 172.217.163.206: seq=10 ttl=53 time=29.745 ms
+64 bytes from 172.217.163.206: seq=11 ttl=53 time=38.359 ms
+64 bytes from 172.217.163.206: seq=12 ttl=53 time=41.387 ms
+64 bytes from 172.217.163.206: seq=13 ttl=53 time=26.215 ms
+64 bytes from 172.217.163.206: seq=14 ttl=53 time=102.942 ms
+64 bytes from 172.217.163.206: seq=15 ttl=53 time=25.720 ms
+64 bytes from 172.217.163.206: seq=16 ttl=53 time=30.969 ms
+64 bytes from 172.217.163.206: seq=17 ttl=53 time=26.842 ms
+64 bytes from 172.217.163.206: seq=18 ttl=53 time=30.122 ms
+64 bytes from 172.217.163.206: seq=19 ttl=53 time=26.787 ms
+
+--- google.com ping statistics ---
+20 packets transmitted, 20 packets received, 0% packet loss
+round-trip min/avg/max = 25.720/34.403/102.942 ms
+root@dockertest:/home/vagrant/pinger# docker container run al-ap:3
+PING google.com (172.217.163.206): 56 data bytes
+64 bytes from 172.217.163.206: seq=0 ttl=53 time=29.956 ms
+64 bytes from 172.217.163.206: seq=1 ttl=53 time=38.770 ms
+64 bytes from 172.217.163.206: seq=2 ttl=53 time=30.028 ms
+64 bytes from 172.217.163.206: seq=3 ttl=53 time=72.473 ms
+64 bytes from 172.217.163.206: seq=4 ttl=53 time=37.164 ms
+64 bytes from 172.217.163.206: seq=5 ttl=53 time=77.774 ms
+64 bytes from 172.217.163.206: seq=6 ttl=53 time=25.531 ms
+64 bytes from 172.217.163.206: seq=7 ttl=53 time=25.380 ms
+64 bytes from 172.217.163.206: seq=8 ttl=53 time=26.259 ms
+64 bytes from 172.217.163.206: seq=9 ttl=53 time=25.256 ms
+64 bytes from 172.217.163.206: seq=10 ttl=53 time=25.626 ms
+64 bytes from 172.217.163.206: seq=11 ttl=53 time=34.708 ms
+64 bytes from 172.217.163.206: seq=12 ttl=53 time=45.699 ms
+64 bytes from 172.217.163.206: seq=13 ttl=53 time=24.703 ms
+64 bytes from 172.217.163.206: seq=14 ttl=53 time=27.735 ms
+64 bytes from 172.217.163.206: seq=15 ttl=53 time=26.723 ms
+64 bytes from 172.217.163.206: seq=16 ttl=53 time=31.224 ms
+64 bytes from 172.217.163.206: seq=17 ttl=53 time=36.120 ms
+64 bytes from 172.217.163.206: seq=18 ttl=53 time=31.625 ms
+64 bytes from 172.217.163.206: seq=19 ttl=53 time=35.716 ms
+
+--- google.com ping statistics ---
+20 packets transmitted, 20 packets received, 0% packet loss
+round-trip min/avg/max = 24.703/35.423/77.774 ms
+root@dockertest:/home/vagrant/pinger# vi Dockerfile
+root@dockertest:/home/vagrant/pinger# cat Dockerfile
+FROM alpine
+RUN apk update && apk add apache2
+CMD httpd -D FOREGROUND
+root@dockertest:/home/vagrant/pinger# docker image build -f Dockerfile -t al-ap:latest -t al-ap:4 .
+Sending build context to Docker daemon 2.048 kB
+Step 1/3 : FROM alpine
+ ---> a187dde48cd2
+Step 2/3 : RUN apk update && apk add apache2
+ ---> Using cache
+ ---> 069e52b49633
+Step 3/3 : CMD httpd -D FOREGROUND
+ ---> Running in 51fb07b14b02
+ ---> e746d709f855
+Removing intermediate container 51fb07b14b02
+Successfully built e746d709f855
+root@dockertest:/home/vagrant/pinger# docker container run -d -p 9999:80 al-ap:4
+b93c3dd28ea50b68280853f8ba191512681c6e9aa56e0c4be9e5be085ea81538
+root@dockertest:/home/vagrant/pinger# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+al-ap                        4                   e746d709f855        2 minutes ago       10.8 MB
+al-ap                        latest              e746d709f855        2 minutes ago       10.8 MB
+al-ap                        3                   41a9fc45fa5d        6 minutes ago       10.8 MB
+al-ap                        2                   bc959fee2834        9 minutes ago       10.8 MB
+al-ap                        1                   069e52b49633        15 minutes ago      10.8 MB
+adityaprabhakara/mywebsite   2                   32c1f81631f8        About an hour ago   148 MB
+adityaprabhakara/mywebsite   latest              5780686b1b22        2 hours ago         148 MB
+alpine                       latest              a187dde48cd2        34 hours ago        5.6 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant/pinger#
