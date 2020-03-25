@@ -22,7 +22,11 @@ username : vagrant
 password : vagrant
 
 7. Install docker using the below
- 
+Login as root using the command
+"sudo su"
+
+Execute the below as root user
+
 echo "installing docker"
 apt-get update
 apt-get install -y \
