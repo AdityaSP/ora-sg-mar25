@@ -670,3 +670,153 @@ root         1     0  0 04:27 ?        00:00:00 nginx: master process nginx -g d
 nginx        6     1  0 04:27 ?        00:00:00 nginx: worker process
 root       433     0  0 04:50 ?        00:00:00 ps -ef
 root@dockertest:/home/vagrant#
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+f64d5bd36489        nginx               "nginx -g 'daemon ..."   About an hour ago   Up About an hour    0.0.0.0:9091->80/tcp   competent_bohr
+root@dockertest:/home/vagrant# docker container stop f64d5bd36489
+f64d5bd36489
+root@dockertest:/home/vagrant# docker container start f64d5bd36489
+f64d5bd36489
+root@dockertest:/home/vagrant# docker container exec f64d5bd36489 ping -c2 google.com
+PING google.com (172.217.163.206) 56(84) bytes of data.
+64 bytes from maa05s06-in-f14.1e100.net (172.217.163.206): icmp_seq=1 ttl=54 time=15.9 ms
+64 bytes from maa05s06-in-f14.1e100.net (172.217.163.206): icmp_seq=2 ttl=54 time=14.6 ms
+
+--- google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 3ms
+rtt min/avg/max/mdev = 14.558/15.229/15.901/0.682 ms
+root@dockertest:/home/vagrant# docker container exec -it f64d5bd36489 sh
+# bash
+root@f64d5bd36489:/# cd /usr/share/nginx/html/
+50x.html    index.html
+root@f64d5bd36489:/# cd /usr/share/nginx/html/
+root@f64d5bd36489:/usr/share/nginx/html# cat index.html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+root@f64d5bd36489:/usr/share/nginx/html# vi index.html
+bash: vi: command not found
+root@f64d5bd36489:/usr/share/nginx/html# cat > index.html
+<h1>My Product Code</h1>
+^C
+root@f64d5bd36489:/usr/share/nginx/html# cat index.html
+<h1>My Product Code</h1>
+root@f64d5bd36489:/usr/share/nginx/html# exit
+exit
+# exit
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+f64d5bd36489        nginx               "nginx -g 'daemon ..."   About an hour ago   Up 5 minutes        0.0.0.0:9091->80/tcp   competent_bohr
+root@dockertest:/home/vagrant# docker container commit f64d5bd36489 mywebsite
+sha256:5780686b1b22bc253464eb1af13ae070b10ed1693bece216a981c57a17defe27
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED              SIZE
+mywebsite           latest              5780686b1b22        About a minute ago   148 MB
+nginx               latest              6678c7c2e56c        2 weeks ago          127 MB
+root@dockertest:/home/vagrant# docker container rm -f f64d5bd36489
+f64d5bd36489
+root@dockertest:/home/vagrant# docker container run -d -p 9095:80 mywebsite
+0e30f15c24a1291807065c7d828bee33cf70ca49dc86f91291b3d928af18f578
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+0e30f15c24a1        mywebsite           "nginx -g 'daemon ..."   24 seconds ago      Up 22 seconds       0.0.0.0:9095->80/tcp   peaceful_engelbart
+root@dockertest:/home/vagrant# docker container exec 0e30f15c24a1 ps -ef
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 06:03 ?        00:00:00 nginx: master process nginx -g daemon off;
+nginx        6     1  0 06:03 ?        00:00:00 nginx: worker process
+root         7     0  0 06:04 ?        00:00:00 ps -ef
+root@dockertest:/home/vagrant# docker container exec 0e30f15c24a1 ping -c2 google.com
+PING google.com (172.217.163.206) 56(84) bytes of data.
+64 bytes from maa05s06-in-f14.1e100.net (172.217.163.206): icmp_seq=1 ttl=54 time=16.3 ms
+64 bytes from maa05s06-in-f14.1e100.net (172.217.163.206): icmp_seq=2 ttl=54 time=15.6 ms
+
+--- google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 3ms
+rtt min/avg/max/mdev = 15.570/15.952/16.334/0.382 ms
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+mywebsite           latest              5780686b1b22        10 minutes ago      148 MB
+nginx               latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant# docker image pull nginx
+Using default tag: latest
+latest: Pulling from library/nginx
+Digest: sha256:2539d4344dd18e1df02be842ffc435f8e1f699cfc55516e2cf2cb16b7a9aea0b
+Status: Image is up to date for nginx:latest
+root@dockertest:/home/vagrant# docker image push mywebsite
+The push refers to a repository [docker.io/library/mywebsite]
+53aa81f59e55: Preparing
+55a77731ed26: Preparing
+71f2244bc14d: Preparing
+f2cb0ecef392: Preparing
+denied: requested access to the resource is denied
+root@dockertest:/home/vagrant# docker image push adityaprabhakara/mywebsite
+The push refers to a repository [docker.io/adityaprabhakara/mywebsite]
+An image does not exist locally with the tag: adityaprabhakara/mywebsite
+root@dockertest:/home/vagrant# #docker container commit f64d5bd36489 adityaprabhakara/mywebsite
+root@dockertest:/home/vagrant# docker image tag mywebsite adityaprabhakara/mywebsite
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+adityaprabhakara/mywebsite   latest              5780686b1b22        16 minutes ago      148 MB
+mywebsite                    latest              5780686b1b22        16 minutes ago      148 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant# docker image push adityaprabhakara/mywebsite
+The push refers to a repository [docker.io/adityaprabhakara/mywebsite]
+53aa81f59e55: Preparing
+55a77731ed26: Preparing
+71f2244bc14d: Preparing
+f2cb0ecef392: Preparing
+denied: requested access to the resource is denied
+root@dockertest:/home/vagrant# docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: adityaprabhakara
+Password:
+Login Succeeded
+root@dockertest:/home/vagrant# docker image push adityaprabhakara/mywebsite
+The push refers to a repository [docker.io/adityaprabhakara/mywebsite]
+53aa81f59e55: Pushed
+55a77731ed26: Pushed
+71f2244bc14d: Pushed
+f2cb0ecef392: Pushed
+latest: digest: sha256:dff3d204acefe411d30f03c5f7146ad1101cd105db1262afbb853fce72203d84 size: 1160
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+adityaprabhakara/mywebsite   latest              5780686b1b22        20 minutes ago      148 MB
+mywebsite                    latest              5780686b1b22        20 minutes ago      148 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant# docker image pull nginx
+Using default tag: latest
+latest: Pulling from library/nginx
+Digest: sha256:2539d4344dd18e1df02be842ffc435f8e1f699cfc55516e2cf2cb16b7a9aea0b
+Status: Image is up to date for nginx:latest
+root@dockertest:/home/vagrant#
