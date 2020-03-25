@@ -1,0 +1,32 @@
+1. 
+Install virtualbox from virtualbox.org
+(Hint: Click through installation)
+Install Vagrant from https://www.vagrantup.com/downloads.html
+(Hint: Click through installation of vagrant)
+
+
+2. Only for old windows machines
+    2.1 check for powershell version
+        $PSVersionTable.PSVersion   OR get-host
+    2.2 if version is less than 3 then you upgrade your powershell
+        https://www.microsoft.com/en-us/download/details.aspx?id=54616
+        
+4. connect through putty @ 192.167.10.75
+username : vagrant
+password : vagrant
+
+3. Install docker using the below
+ 
+echo "installing docker"
+apt-get update
+apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository \
+   "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+   $(lsb_release -cs) \
+   stable"
+apt-get update && apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk '{print $3}')
