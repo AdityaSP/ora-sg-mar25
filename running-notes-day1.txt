@@ -132,3 +132,353 @@ root@dockertest:/home/vagrant# docker container stop 3bb
 root@dockertest:/home/vagrant#
 
 
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+
+root@dockertest:/home/vagrant# docker container rm adb98b046e11
+Error response from daemon: You cannot remove a running container adb98b046e11b37f3706f3bcea9f4a55c6750a27e356c82eb4dc772fbb470843. Stop the container before attempting removal or use -f
+root@dockertest:/home/vagrant# docker container rm -f adb98b046e11
+adb98b046e11
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+3bbe6db41dee        nginx               "nginx -g 'daemon ..."   34 minutes ago      Up 22 minutes       80/tcp              cranky_hawking
+root@dockertest:/home/vagrant# docker container inspect 3bbe6db41dee
+[
+    {
+        "Id": "3bbe6db41deea45c5a6d64deaa3f7642a7e71e08660ad05bf9106acfbe20765d",
+        "Created": "2020-03-25T03:30:16.472477809Z",
+        "Path": "nginx",
+        "Args": [
+            "-g",
+            "daemon off;"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 16001,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-25T03:43:11.864086225Z",
+            "FinishedAt": "2020-03-25T03:41:22.671853744Z"
+        },
+        "Image": "sha256:6678c7c2e56c970388f8d5a398aa30f2ab60e85f20165e101053c3d3a11e6663",
+        "ResolvConfPath": "/var/lib/docker/containers/3bbe6db41deea45c5a6d64deaa3f7642a7e71e08660ad05bf9106acfbe20765d/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/3bbe6db41deea45c5a6d64deaa3f7642a7e71e08660ad05bf9106acfbe20765d/hostname",
+        "HostsPath": "/var/lib/docker/containers/3bbe6db41deea45c5a6d64deaa3f7642a7e71e08660ad05bf9106acfbe20765d/hosts",
+        "LogPath": "/var/lib/docker/containers/3bbe6db41deea45c5a6d64deaa3f7642a7e71e08660ad05bf9106acfbe20765d/3bbe6db41deea45c5a6d64deaa3f7642a7e71e08660ad05bf9106acfbe20765d-json.log",
+        "Name": "/cranky_hawking",
+        "RestartCount": 0,
+        "Driver": "aufs",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        },
+        "GraphDriver": {
+            "Name": "aufs",
+            "Data": null
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "3bbe6db41dee",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "80/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NGINX_VERSION=1.17.9",
+                "NJS_VERSION=0.3.9",
+                "PKG_RELEASE=1~buster"
+            ],
+            "Cmd": [
+                "nginx",
+                "-g",
+                "daemon off;"
+            ],
+            "ArgsEscaped": true,
+            "Image": "nginx",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {
+                "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>"
+            },
+            "StopSignal": "SIGTERM"
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "1e1900d0fa1bd141e24dbfe2aa45e19847d8d45c084671448afc5b872b006b42",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "80/tcp": null
+            },
+            "SandboxKey": "/var/run/docker/netns/1e1900d0fa1b",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "21f4bc5705eefb4985b0aa6450bbe8abaaa07f7eefdeead5654dacda8ece3997",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.2",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:02",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "46103c7e80ba16524e1dcb7cdd6687669facb442195c10becc9eea7127223e25",
+                    "EndpointID": "21f4bc5705eefb4985b0aa6450bbe8abaaa07f7eefdeead5654dacda8ece3997",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02"
+                }
+            }
+        }
+    }
+]
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant# ifconfig
+docker0   Link encap:Ethernet  HWaddr 02:42:50:90:fa:2c
+          inet addr:172.17.0.1  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:50ff:fe90:fa2c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:32 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:12 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:2144 (2.1 KB)  TX bytes:1008 (1.0 KB)
+
+eth0      Link encap:Ethernet  HWaddr 08:00:27:6b:c1:df
+          inet addr:10.0.2.15  Bcast:10.0.2.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fe6b:c1df/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:174342 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:78056 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:143995063 (143.9 MB)  TX bytes:4863612 (4.8 MB)
+
+eth1      Link encap:Ethernet  HWaddr 08:00:27:2e:a6:9a
+          inet addr:192.167.10.75  Bcast:192.167.10.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fe2e:a69a/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:2686 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:2441 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:226908 (226.9 KB)  TX bytes:401953 (401.9 KB)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:64 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:64 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1
+          RX bytes:5824 (5.8 KB)  TX bytes:5824 (5.8 KB)
+
+vethdcea7bb Link encap:Ethernet  HWaddr 36:31:d1:68:cd:aa
+          inet6 addr: fe80::3431:d1ff:fe68:cdaa/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:8 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:18 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:648 (648.0 B)  TX bytes:1476 (1.4 KB)
+
+root@dockertest:/home/vagrant# curl 172.17.0.2:80
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+root@dockertest:/home/vagrant# docker container run -d -p 9091:80 nginx
+root@dockertest:/home/vagrant# docker container run -d -p 9091:80 nginx
+f64d5bd36489f3660a7afea2adda3f2a86dd358cb2c36e4cc3434ff4c5894b3c
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+f64d5bd36489        nginx               "nginx -g 'daemon ..."   5 seconds ago       Up 4 seconds        0.0.0.0:9091->80/tcp   competent_bohr
+3bbe6db41dee        nginx               "nginx -g 'daemon ..."   54 minutes ago      Up 41 minutes       80/tcp                 cranky_hawking
+root@dockertest:/home/vagrant# docker container stop f64d5bd36489
+f64d5bd36489
+root@dockertest:/home/vagrant# docker container start f64d5bd36489
+f64d5bd36489
+root@dockertest:/home/vagrant# ps -ef | grep docker-proxy
+root     16461 14687  0 04:27 ?        00:00:00 /usr/bin/docker-proxy -proto tcp                                                                   -host-ip 0.0.0.0 -host-port 9091 -container-ip 172.17.0.3 -container-port 80
+root     16509 15393  0 04:27 pts/1    00:00:00 grep --color=auto docker-proxy
+root@dockertest:/home/vagrant# docker container inspect f64d5bd36489 | grep -i i                                                                  paddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.3",
+                    "IPAddress": "172.17.0.3",
+root@dockertest:/home/vagrant# docker container inspect 3bb | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.2",
+                    "IPAddress": "172.17.0.2",
+root@dockertest:/home/vagrant# curl 172.17.0.2:80
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+root@dockertest:/home/vagrant# curl localhost:9091
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+root@dockertest:/home/vagrant#
