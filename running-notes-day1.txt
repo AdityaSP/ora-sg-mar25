@@ -1,0 +1,134 @@
+root@dockertest:/home/vagrant# ps -ef | grep docker
+root     14687     1  0 00:46 ?        00:00:16 /usr/bin/dockerd -H fd://
+root     14696 14687  0 00:46 ?        00:00:06 docker-containerd -l unix:///var/run/docker/libcontainerd/docker-containerd.sock --metrics-interval=0 --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd --shim docker-containerd-shim --runtime docker-runc
+root     15666 15393  0 03:20 pts/1    00:00:00 grep --color=auto docker
+root@dockertest:/home/vagrant# docker
+
+Usage:  docker COMMAND
+
+A self-sufficient runtime for containers
+
+Options:
+      --config string      Location of client config files (default "/root/.docker")
+  -D, --debug              Enable debug mode
+      --help               Print usage
+  -H, --host list          Daemon socket(s) to connect to (default [])
+  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal") (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default "/root/.docker/ca.pem")
+      --tlscert string     Path to TLS certificate file (default "/root/.docker/cert.pem")
+      --tlskey string      Path to TLS key file (default "/root/.docker/key.pem")
+      --tlsverify          Use TLS and verify the remote
+  -v, --version            Print version information and quit
+
+Management Commands:
+  container   Manage containers
+  image       Manage images
+  network     Manage networks
+  node        Manage Swarm nodes
+  plugin      Manage plugins
+  secret      Manage Docker secrets
+  service     Manage services
+  stack       Manage Docker stacks
+  swarm       Manage Swarm
+  system      Manage Docker
+  volume      Manage volumes
+
+Commands:
+  attach      Attach to a running container
+  build       Build an image from a Dockerfile
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  events      Get real time events from the server
+  exec        Run a command in a running container
+  export      Export a container's filesystem as a tar archive
+  history     Show the history of an image
+  images      List images
+  import      Import the contents from a tarball to create a filesystem image
+  info        Display system-wide information
+  inspect     Return low-level information on Docker objects
+  kill        Kill one or more running containers
+  load        Load an image from a tar archive or STDIN
+  login       Log in to a Docker registry
+  logout      Log out from a Docker registry
+  logs        Fetch the logs of a container
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  ps          List containers
+  pull        Pull an image or a repository from a registry
+  push        Push an image or a repository to a registry
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  rmi         Remove one or more images
+  run         Run a command in a new container
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  search      Search the Docker Hub for images
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  version     Show the Docker version information
+  wait        Block until one or more containers stop, then print their exit codes
+
+Run 'docker COMMAND --help' for more information on a command.
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+root@dockertest:/home/vagrant# docker container run nginx
+Unable to find image 'nginx:latest' locally
+latest: Pulling from library/nginx
+68ced04f60ab: Pull complete
+28252775b295: Pull complete
+a616aa3b0bf2: Pull complete
+Digest: sha256:2539d4344dd18e1df02be842ffc435f8e1f699cfc55516e2cf2cb16b7a9aea0b
+Status: Downloaded newer image for nginx:latest
+
+
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+root@dockertest:/home/vagrant# docker container ls -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES
+3bbe6db41dee        nginx               "nginx -g 'daemon ..."   12 minutes ago      Exited (0) 59 seconds ago                       cranky_hawking
+root@dockertest:/home/vagrant# docker container start cranky_hawking
+cranky_hawking
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+3bbe6db41dee        nginx               "nginx -g 'daemon ..."   13 minutes ago      Up 37 seconds       80/tcp              cranky_hawking
+root@dockertest:/home/vagrant# docker container run -d nginx
+adb98b046e11b37f3706f3bcea9f4a55c6750a27e356c82eb4dc772fbb470843
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+adb98b046e11        nginx               "nginx -g 'daemon ..."   28 seconds ago      Up 26 seconds       80/tcp              vigilant_kalam
+3bbe6db41dee        nginx               "nginx -g 'daemon ..."   15 minutes ago      Up 3 minutes        80/tcp              cranky_hawking
+root@dockertest:/home/vagrant# echo adb98b046e11b37f3706f3bcea9f4a55c6750a27e356c82eb4dc772fbb470843 | wc -c
+65
+root@dockertest:/home/vagrant# echo -n adb98b046e11b37f3706f3bcea9f4a55c6750a27e356c82eb4dc772fbb470843 | wc -c
+64
+root@dockertest:/home/vagrant#
+
+root@dockertest:/home/vagrant# ls -ltr /var/run/docker.sock
+srw-rw---- 1 root docker 0 Mar 25 00:46 /var/run/docker.sock
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED                                                STATUS              PORTS               NAMES
+3bbe6db41dee        nginx               "nginx -g 'daemon ..."   6 minutes ago                                          Up 6 minutes        80/tcp              cranky_hawking
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+3bbe6db41dee        nginx               "nginx -g 'daemon ..."   6 minutes ago       Up 6 minutes        80/tcp              cranky_hawking
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS
+3bbe6db41dee        nginx               "nginx -g 'daemon ..."   6 minutes ago       Up 6 minutes        80/tcp
+root@dockertest:/home/vagrant# #docker container stop 3bbe6db41dee
+root@dockertest:/home/vagrant# #docker container stop cranky_hawking
+root@dockertest:/home/vagrant# docker container stop 3bb
+3bb
+root@dockertest:/home/vagrant#
+
+
