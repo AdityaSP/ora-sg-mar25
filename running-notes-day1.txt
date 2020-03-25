@@ -482,3 +482,191 @@ Commercial support is available at
 </body>
 </html>
 root@dockertest:/home/vagrant#
+
+
+
+---------------------------------------------------------------------------------
+
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                 NAMES
+f64d5bd36489        nginx               "nginx -g 'daemon ..."   12 minutes ago      Up 9 minutes        0.0.0.0:90                               91->80/tcp   competent_bohr
+root@dockertest:/home/vagrant# docker container exec f64d5bd36489 ls
+bin
+boot
+dev
+etc
+home
+lib
+lib64
+media
+mnt
+opt
+proc
+root
+run
+sbin
+srv
+sys
+tmp
+usr
+var
+root@dockertest:/home/vagrant# docker container exec f64d5bd36489 pwd
+/
+root@dockertest:/home/vagrant# ls /
+bin   dev  home        lib    lost+found  mnt  proc  run   snap  sys  usr      var
+boot  etc  initrd.img  lib64  media       opt  root  sbin  srv   tmp  vagrant  vmlinuz
+root@dockertest:/home/vagrant# docker container exec f64d5bd36489 touch /tmp/f1.txt
+root@dockertest:/home/vagrant# ls -ltr /tmp/f1.txt
+ls: cannot access '/tmp/f1.txt': No such file or directory
+root@dockertest:/home/vagrant# docker container exec f64d5bd36489 ls /tmp/f1.txt
+/tmp/f1.txt
+root@dockertest:/home/vagrant# docker container exec -it f64d5bd36489 sh
+# hostname
+f64d5bd36489
+# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+# ls /tmp/f1.txt
+/tmp/f1.txt
+# ps
+sh: 4: ps: not found
+# ping
+sh: 5: ping: not found
+# vi
+sh: 6: vi: not found
+# cat /etc/os*
+PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+NAME="Debian GNU/Linux"
+VERSION_ID="10"
+VERSION="10 (buster)"
+VERSION_CODENAME=buster
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+# apt-get update
+Get:1 http://security.debian.org/debian-security buster/updates InRelease [65.4 kB]
+Get:2 http://deb.debian.org/debian buster InRelease [122 kB]
+Get:3 http://deb.debian.org/debian buster-updates InRelease [49.3 kB]
+Get:4 http://security.debian.org/debian-security buster/updates/main amd64 Packages [183 kB]
+Get:5 http://deb.debian.org/debian buster/main amd64 Packages [7907 kB]
+Get:6 http://deb.debian.org/debian buster-updates/main amd64 Packages [7380 B]
+Fetched 8334 kB in 6s (1287 kB/s)
+Reading package lists... Done
+# apt-get install iputils-ping
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following additional packages will be installed:
+  libcap2 libcap2-bin libpam-cap
+The following NEW packages will be installed:
+  iputils-ping libcap2 libcap2-bin libpam-cap
+0 upgraded, 4 newly installed, 0 to remove and 0 not upgraded.
+Need to get 104 kB of archives.
+After this operation, 315 kB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://deb.debian.org/debian buster/main amd64 libcap2 amd64 1:2.25-2 [17.6 kB]
+Get:2 http://deb.debian.org/debian buster/main amd64 iputils-ping amd64 3:20180629-2 [43.0 kB]
+Get:3 http://deb.debian.org/debian buster/main amd64 libcap2-bin amd64 1:2.25-2 [28.8 kB]
+Get:4 http://deb.debian.org/debian buster/main amd64 libpam-cap amd64 1:2.25-2 [14.3 kB]
+Fetched 104 kB in 0s (256 kB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package libcap2:amd64.
+(Reading database ... 7203 files and directories currently installed.)
+Preparing to unpack .../libcap2_1%3a2.25-2_amd64.deb ...
+Unpacking libcap2:amd64 (1:2.25-2) ...
+Selecting previously unselected package iputils-ping.
+Preparing to unpack .../iputils-ping_3%3a20180629-2_amd64.deb ...
+Unpacking iputils-ping (3:20180629-2) ...
+Selecting previously unselected package libcap2-bin.
+Preparing to unpack .../libcap2-bin_1%3a2.25-2_amd64.deb ...
+Unpacking libcap2-bin (1:2.25-2) ...
+Selecting previously unselected package libpam-cap:amd64.
+Preparing to unpack .../libpam-cap_1%3a2.25-2_amd64.deb ...
+Unpacking libpam-cap:amd64 (1:2.25-2) ...
+Setting up libcap2:amd64 (1:2.25-2) ...
+Setting up libcap2-bin (1:2.25-2) ...
+Setting up libpam-cap:amd64 (1:2.25-2) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (No usable dialog-like program is installed, so the dialog based frontend cannot be used. at /usr/share/perl5/Debconf/FrontEnd/Dialog.pm line 76.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.28.1 /usr/local/share/perl/5.28.1 /usr/lib/x86_64-linux-gnu/perl5/5.28 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl/5.28 /usr/share/perl/5.28 /usr/local/lib/site_perl /usr/lib/x86_64-linux-gnu/perl-base) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+debconf: falling back to frontend: Teletype
+Setting up iputils-ping (3:20180629-2) ...
+Processing triggers for libc-bin (2.28-10) ...
+# ping google.com
+PING google.com (172.217.163.206) 56(84) bytes of data.
+64 bytes from maa05s06-in-f14.1e100.net (172.217.163.206): icmp_seq=1 ttl=54 time=92.9 ms
+64 bytes from maa05s06-in-f14.1e100.net (172.217.163.206): icmp_seq=2 ttl=54 time=11.3 ms
+64 bytes from maa05s06-in-f14.1e100.net (172.217.163.206): icmp_seq=3 ttl=54 time=15.1 ms
+^C
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 200ms
+rtt min/avg/max/mdev = 11.270/39.760/92.926/37.626 ms
+# apt-get install proc-ps
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+E: Unable to locate package proc-ps
+# apt-get install procps
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following additional packages will be installed:
+  libgpm2 libncurses6 libprocps7 psmisc
+Suggested packages:
+  gpm
+The following NEW packages will be installed:
+  libgpm2 libncurses6 libprocps7 procps psmisc
+0 upgraded, 5 newly installed, 0 to remove and 0 not upgraded.
+Need to get 584 kB of archives.
+After this operation, 1931 kB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://deb.debian.org/debian buster/main amd64 libncurses6 amd64 6.1+20181013-2+deb10u2 [102 kB]
+Get:2 http://deb.debian.org/debian buster/main amd64 libprocps7 amd64 2:3.3.15-2 [61.7 kB]
+Get:3 http://deb.debian.org/debian buster/main amd64 procps amd64 2:3.3.15-2 [259 kB]
+Get:4 http://deb.debian.org/debian buster/main amd64 libgpm2 amd64 1.20.7-5 [35.1 kB]
+Get:5 http://deb.debian.org/debian buster/main amd64 psmisc amd64 23.2-1 [126 kB]
+Fetched 584 kB in 1s (689 kB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package libncurses6:amd64.
+(Reading database ... 7243 files and directories currently installed.)
+Preparing to unpack .../libncurses6_6.1+20181013-2+deb10u2_amd64.deb ...
+Unpacking libncurses6:amd64 (6.1+20181013-2+deb10u2) ...
+Selecting previously unselected package libprocps7:amd64.
+Preparing to unpack .../libprocps7_2%3a3.3.15-2_amd64.deb ...
+Unpacking libprocps7:amd64 (2:3.3.15-2) ...
+Selecting previously unselected package procps.
+Preparing to unpack .../procps_2%3a3.3.15-2_amd64.deb ...
+Unpacking procps (2:3.3.15-2) ...
+Selecting previously unselected package libgpm2:amd64.
+Preparing to unpack .../libgpm2_1.20.7-5_amd64.deb ...
+Unpacking libgpm2:amd64 (1.20.7-5) ...
+Selecting previously unselected package psmisc.
+Preparing to unpack .../psmisc_23.2-1_amd64.deb ...
+Unpacking psmisc (23.2-1) ...
+Setting up libgpm2:amd64 (1.20.7-5) ...
+Setting up psmisc (23.2-1) ...
+Setting up libprocps7:amd64 (2:3.3.15-2) ...
+Setting up libncurses6:amd64 (6.1+20181013-2+deb10u2) ...
+Setting up procps (2:3.3.15-2) ...
+update-alternatives: using /usr/bin/w.procps to provide /usr/bin/w (w) in auto mode
+update-alternatives: warning: skip creation of /usr/share/man/man1/w.1.gz because associated file /usr/share/man/man1/w.procps.1.gz (of link group w) doesn't exist
+Processing triggers for libc-bin (2.28-10) ...
+# ps
+  PID TTY          TIME CMD
+   25 ?        00:00:00 sh
+  431 ?        00:00:00 ps
+# ps -ef
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 04:27 ?        00:00:00 nginx: master process nginx -g daemon off;
+nginx        6     1  0 04:27 ?        00:00:00 nginx: worker process
+root        25     0  0 04:44 ?        00:00:00 sh
+root       432    25  0 04:50 ?        00:00:00 ps -ef
+# exit
+root@dockertest:/home/vagrant# docker container exec f64d5bd36489 ps -ef
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 04:27 ?        00:00:00 nginx: master process nginx -g daemon off;
+nginx        6     1  0 04:27 ?        00:00:00 nginx: worker process
+root       433     0  0 04:50 ?        00:00:00 ps -ef
+root@dockertest:/home/vagrant#
