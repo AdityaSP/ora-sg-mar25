@@ -820,3 +820,111 @@ latest: Pulling from library/nginx
 Digest: sha256:2539d4344dd18e1df02be842ffc435f8e1f699cfc55516e2cf2cb16b7a9aea0b
 Status: Image is up to date for nginx:latest
 root@dockertest:/home/vagrant#
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+adityaprabhakara/mywebsite   latest              5780686b1b22        53 minutes ago      148 MB
+mywebsite                    latest              5780686b1b22        53 minutes ago      148 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant# docker image history nginx
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+6678c7c2e56c        2 weeks ago         /bin/sh -c #(nop)  CMD ["nginx" "-g" "daem...   0 B
+<missing>           2 weeks ago         /bin/sh -c #(nop)  STOPSIGNAL SIGTERM           0 B
+<missing>           2 weeks ago         /bin/sh -c #(nop)  EXPOSE 80                    0 B
+<missing>           2 weeks ago         /bin/sh -c ln -sf /dev/stdout /var/log/ngi...   22 B
+<missing>           2 weeks ago         /bin/sh -c set -x     && addgroup --system...   57.6 MB
+<missing>           2 weeks ago         /bin/sh -c #(nop)  ENV PKG_RELEASE=1~buster     0 B
+<missing>           2 weeks ago         /bin/sh -c #(nop)  ENV NJS_VERSION=0.3.9        0 B
+<missing>           2 weeks ago         /bin/sh -c #(nop)  ENV NGINX_VERSION=1.17.9     0 B
+<missing>           3 weeks ago         /bin/sh -c #(nop)  LABEL maintainer=NGINX ...   0 B
+<missing>           4 weeks ago         /bin/sh -c #(nop)  CMD ["bash"]                 0 B
+<missing>           4 weeks ago         /bin/sh -c #(nop) ADD file:e5a364615e0f696...   69.2 MB
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+adityaprabhakara/mywebsite   latest              5780686b1b22        55 minutes ago      148 MB
+mywebsite                    latest              5780686b1b22        55 minutes ago      148 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant# docker image history mywebsite
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+5780686b1b22        59 minutes ago      nginx -g daemon off;                            20.8 MB
+6678c7c2e56c        2 weeks ago         /bin/sh -c #(nop)  CMD ["nginx" "-g" "daem...   0 B
+<missing>           2 weeks ago         /bin/sh -c #(nop)  STOPSIGNAL SIGTERM           0 B
+<missing>           2 weeks ago         /bin/sh -c #(nop)  EXPOSE 80                    0 B
+<missing>           2 weeks ago         /bin/sh -c ln -sf /dev/stdout /var/log/ngi...   22 B
+<missing>           2 weeks ago         /bin/sh -c set -x     && addgroup --system...   57.6 MB
+<missing>           2 weeks ago         /bin/sh -c #(nop)  ENV PKG_RELEASE=1~buster     0 B
+<missing>           2 weeks ago         /bin/sh -c #(nop)  ENV NJS_VERSION=0.3.9        0 B
+<missing>           2 weeks ago         /bin/sh -c #(nop)  ENV NGINX_VERSION=1.17.9     0 B
+<missing>           3 weeks ago         /bin/sh -c #(nop)  LABEL maintainer=NGINX ...   0 B
+<missing>           4 weeks ago         /bin/sh -c #(nop)  CMD ["bash"]                 0 B
+<missing>           4 weeks ago         /bin/sh -c #(nop) ADD file:e5a364615e0f696...   69.2 MB
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant# docker image rm adityaprabhakara/mywebsite
+Untagged: adityaprabhakara/mywebsite:latest
+Untagged: adityaprabhakara/mywebsite@sha256:dff3d204acefe411d30f03c5f7146ad1101cd105db1262afbb853fce72203d84
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+0e30f15c24a1        mywebsite           "nginx -g 'daemon ..."   About an hour ago   Up About an hour    0.0.0.0:9095->80/tcp   peaceful_engelbart
+root@dockertest:/home/vagrant# docker container rm -f 0e30f15c24a1
+0e30f15c24a1
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+mywebsite           latest              5780686b1b22        About an hour ago   148 MB
+nginx               latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant# docker image rm mywebsite
+Untagged: mywebsite:latest
+Deleted: sha256:5780686b1b22bc253464eb1af13ae070b10ed1693bece216a981c57a17defe27
+Deleted: sha256:8d0206dedea3fc498bb49a07aa3921c668654ebc6fb7a44e6b2dbcc4aae991bb
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nginx               latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant# docker image rm nginx
+Untagged: nginx:latest
+Untagged: nginx@sha256:2539d4344dd18e1df02be842ffc435f8e1f699cfc55516e2cf2cb16b7a9aea0b
+Deleted: sha256:6678c7c2e56c970388f8d5a398aa30f2ab60e85f20165e101053c3d3a11e6663
+Deleted: sha256:3105dd416ca73edaeedb5c15a853bc5aed51045a250cb544b0e936c94932dfcf
+Deleted: sha256:1541955a517830d061b79f2b52b1aed297d81c009ce7766a15527979b6e719c4
+Deleted: sha256:f2cb0ecef392f2a630fa1205b874ab2e2aedf96de04d0b8838e4e728e28142da
+root@dockertest:/home/vagrant# docker image pull adityaprabhakara/mywebsite
+Using default tag: latest
+latest: Pulling from adityaprabhakara/mywebsite
+ca69dd8ac171: Pull complete
+c6ee9c992ad2: Pull complete
+e0ee25f595fa: Pull complete
+0a676c8a0293: Pull complete
+Digest: sha256:dff3d204acefe411d30f03c5f7146ad1101cd105db1262afbb853fce72203d84
+Status: Downloaded newer image for adityaprabhakara/mywebsite:latest
+root@dockertest:/home/vagrant# docker image pull nginx
+Using default tag: latest
+latest: Pulling from library/nginx
+68ced04f60ab: Already exists
+28252775b295: Already exists
+a616aa3b0bf2: Already exists
+Digest: sha256:2539d4344dd18e1df02be842ffc435f8e1f699cfc55516e2cf2cb16b7a9aea0b
+Status: Downloaded newer image for nginx:latest
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+adityaprabhakara/mywebsite   latest              5780686b1b22        About an hour ago   148 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant# docker container run -d -p 9095:80 adityaprabhakara/mywebsite
+e705b588087896444b857349eef05050aee3773e04b5782816a26e0145b82e1a
+root@dockertest:/home/vagrant# docker container exec e705b588 touch /tmp/f2.txt
+root@dockertest:/home/vagrant# docker container commit e705b588 adityaprabhakara/mywebsite:2
+sha256:32c1f81631f81fe5ca7e9d655ce16a9c105edd45159006ad5f58ccd8e7ba4a4f
+root@dockertest:/home/vagrant# docker image ls
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+adityaprabhakara/mywebsite   2                   32c1f81631f8        6 seconds ago       148 MB
+adityaprabhakara/mywebsite   latest              5780686b1b22        About an hour ago   148 MB
+nginx                        latest              6678c7c2e56c        2 weeks ago         127 MB
+root@dockertest:/home/vagrant# docker container run -d -p 9096:80 adityaprabhakara/mywebsite:2
+1c91508fc7f30158cbf65d8b11885a15d7ed2b7ef64fc663549faae35c44185b
+root@dockertest:/home/vagrant#
