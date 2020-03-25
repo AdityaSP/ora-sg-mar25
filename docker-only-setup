@@ -10,12 +10,18 @@ Install Vagrant from https://www.vagrantup.com/downloads.html
         $PSVersionTable.PSVersion   OR get-host
     2.2 if version is less than 3 then you upgrade your powershell
         https://www.microsoft.com/en-us/download/details.aspx?id=54616
-        
-4. connect through putty @ 192.167.10.75
+
+3. download the Vgrantfile and place it in any folder of your choice.
+
+4. cd to the folder which contains Vagrantfile
+
+5. execute the command "vagrant up"
+
+6. connect through putty @ 192.167.10.75
 username : vagrant
 password : vagrant
 
-3. Install docker using the below
+7. Install docker using the below
  
 echo "installing docker"
 apt-get update
