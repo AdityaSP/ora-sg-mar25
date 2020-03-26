@@ -1,0 +1,319 @@
+
+
+root@dockertest:/home/vagrant# docker container run nginx
+Unable to find image 'nginx:latest' locally
+latest: Pulling from library/nginx
+68ced04f60ab: Pull complete
+28252775b295: Pull complete
+a616aa3b0bf2: Pull complete
+Digest: sha256:2539d4344dd18e1df02be842ffc435f8e1f699cfc55516e2cf2cb16b7a9aea0b
+Status: Downloaded newer image for nginx:latest
+
+
+
+root@dockertest:/home/vagrant# docker image push adityaprabhakara/mywebsite
+The push refers to a repository [docker.io/adityaprabhakara/mywebsite]
+53aa81f59e55: Pushed
+55a77731ed26: Pushed
+71f2244bc14d: Pushed
+f2cb0ecef392: Pushed
+latest: digest: sha256:dff3d204acefe411d30f03c5f7146ad1101cd105db1262afbb853fce72203d84 size: 1160
+root@dockertest:/home/vagrant# docker image ls
+
+
+
+docker image pull nginx
+ --> download from hub
+ 
+
+
+nginx --> official image from hub.docker.com
+adityaprabhakara/mywebsite --> image from hub.docker.com but from a user called adityaprabhakara
+
+docker image pull container-registry.oracle.com/mysql/community-server:latest
+
+
+docker login --> by default it was hub.docker.com
+
+docker login container-registry.oracle.com
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+downloaded image nginx
+ran a container from nginx
+opened a shell on the container
+installaed our software
+exited
+docker commit to create a new image
+
+
+root@dockertest:/home/vagrant/pinger# docker image build -f Dockerfile -t al-ap:latest -t al-ap:1 .
+Sending build context to Docker daemon 2.048 kB
+Step 1/2 : FROM alpine
+latest: Pulling from library/alpine
+aad63a933944: Pull complete
+Digest: sha256:b276d875eeed9c7d3f1cfa7edb06b22ed22b14219a7d67c52c56612330348239
+Status: Downloaded newer image for alpine:latest
+ ---> a187dde48cd2
+Step 2/2 : RUN apk update && apk add apache2
+ ---> Running in 0c1850cd4938
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
+v3.11.5-3-g069a7f047d [http://dl-cdn.alpinelinux.org/alpine/v3.11/main]
+v3.11.5-1-ge59ae1cbad [http://dl-cdn.alpinelinux.org/alpine/v3.11/community]
+OK: 11265 distinct packages available
+(1/6) Installing libuuid (2.34-r1)
+(2/6) Installing apr (1.7.0-r0)
+(3/6) Installing expat (2.2.9-r1)
+(4/6) Installing apr-util (1.6.1-r6)
+(5/6) Installing pcre (8.43-r0)
+(6/6) Installing apache2 (2.4.41-r0)
+Executing apache2-2.4.41-r0.pre-install
+Executing busybox-1.31.1-r9.trigger
+OK: 9 MiB in 20 packages
+ ---> 069e52b49633
+Removing intermediate container 0c1850cd4938
+Successfully built 069e52b49633
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
+binaries of excel .exe dll config
+when I run exec workbook runs as a process
+
+
+images --> file system --> binaries
+run this image --> process gets formed --> container
+
+
+
+docker container run al-ap:6
+
+root     14687     1  0 00:46 ?        00:01:18 /usr/bin/dockerd -H fd://
+    root     14696 14687  0 00:46 ?        00:00:20 docker-containerd
+        root     19783 14696  0 08:38 ?        00:00:00 docker-containerd-shim
+            root     19801 19783  0 08:38 ?        00:00:00 httpd -D FOREGROUND
+
+docker-containerd-shim ca05c9cf47a3b81810e6cdb08d8a035bb09f55e6f9827070788fcc09588a477e /var/run/docker/libcontainerd/ca05c9cf47a3b81810e6cdb08d8a035bb09f55e6f9827070788fcc09588a477e docker-runc
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "f205ffdf304cc2224ebd87e9525e664fa361d32ba6d72a67e1d6361a8898d970",
+                "Source": "/var/lib/docker/volumes/f205ffdf304cc2224ebd87e9525e664fa361d32ba6d72a67e1d6361a8898d970/_data",
+                "Destination": "/var/log/apache2",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "b178777a8be4955569545dc0582636043a91b099a06fda3eb3a57f79ffa4464a",
+                "Source": "/var/lib/docker/volumes/b178777a8be4955569545dc0582636043a91b099a06fda3eb3a57f79ffa4464a/_data",
+                "Destination": "/var/log/apache2",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+            
+        ],
+        
+        
+                "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "projdb",
+                "Source": "/var/lib/docker/volumes/projdb/_data",
+                "Destination": "/var/lib/mysql",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+
+
+
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/tmp/serverlogs",
+                "Destination": "/var/log/apache2",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+1. backup :   unnamed volume
+    docker container run -d -p9091:80 -v /var/log/apache2 al-ap:6
+
+                    "Source": "/var/lib/docker/volumes/b178777a8be4955569545dc0582636043a91b099a06fda3eb3a57f79ffa4464a/_data",
+
+    
+2. backup and reusable : named volume 
+    docker container run -d -v projdb:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=welcome mysql:5.7
+    
+                    "Source": "/var/lib/docker/volumes/projdb/_data",
+                    
+                    
+3. backup and reusable and choose my own path : bind mounts
+    docker container run -d -v /tmp/serverlogs:/var/log/apache2 al-ap:6
+
+------------------------------------------------------------------------------------------------------------------------------------
+1. Create network
+docker network create ghost-net
+
+2. bring up db container
+docker service create -d --network ghost-net --name ghost-db -e MYSQL_ROOT_PASSWORD=welcome -v /tmp/blogdata:/var/lib/mysql mysql:5.7 
+
+3. bring up ghost container
+docker container run -d --network ghost-net --name ghost-blog -p 9898:2368 -e database__client=mysql -e database__connection__host=ghost-db -e database__connection__user=root -e database__connection__password=welcome -e database__connection__database=ghost ghost:1-alpine
+
+--------------------------------------------------------------------------------------
+
+docker container run
+    1. runs on a single machine -> not cluster aware
+    2. cannot use to scale 
+    3. no rolling update as this command is dealing with only one container
+    
+    
+docker service
+    1. create containers across my cluster
+    2. rolling updates   -- docker service update --image nginx:alpine
+    3. scale up and scale down -- docker service update --replicas 5 
+    4. resilience -- kill a container and it comes back up
+    5. load balancer -- increase the replicas and the service port will load balance
+    
+    
+------------------------------------------------------------------------------------------
+    
+
+
+
+ecommerce is running on a server
+ecommerce is running on a server
+ecommerce is running on a server
+
+
+ecommerce
+    -> account service
+        account_image:1
+        
+    -> product service
+        product_image:1
+        
+    -> order service
+        order_image:1
+        
+  stack deploy -stack.yml
+    account_service
+    product_service
+    order_service  
+    service update order_service --replicas =5
+  
+services:
+
+  account_service:
+    image: account_image:1
+    restart: always
+    environment:
+      # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
+      database__client: mysql
+      order_svc: order_service
+      database__connection__user: root
+      database__connection__password: example
+      database__connection__database: ghost
+  
+  product_service:
+    image: product_image:1
+    restart: always
+    ports:
+      - 8080:2368
+    environment:
+      # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
+      database__client: mysql
+      order_svc: order_service
+      order_svc: account_service
+      database__connection__user: root
+      database__connection__password: example
+      database__connection__database: ghost
+      
+  order_service:
+    image: product_image:1
+    restart: always
+    environment:
+      # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
+      database__client: mysql
+      database__connection__user: root
+      database__connection__password: example
+      database__connection__database: ghost
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+RBAC -> kuberentes, out of the box, free
+
+RBAC -> docker  enterprise -> paid service
+
+
+
+
+RBAC
+    TLS
+        user ids
+            1. add users to docker group -> only those users ids which belong to docker group can execute docker commands
+                    want write access to /var/run/docker.sock
+                    
+            2. the user id with which the processes run with in the docker container    
+                    docker container run --user 1000 -v /tmp/logs:/tmp/logs  alpine touch /tmp/logs/f2.txt
+            
+        
+        
+1. development docker and kuberentes --> custom resources, custom service, storage drivers, network drivers, docker builds -> chained and staged builds
+
+2. cloud platforms/release/infra team --> swarm, kuberentes, cluster management, network to the infra 
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
