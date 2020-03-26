@@ -1,0 +1,8 @@
+1. Create network
+docker network create ghost-net
+
+2. bring up db container
+docker container run -d --network ghost-net --name ghost-db -e MYSQL_ROOT_PASSWORD=welcome -v /tmp/blogdata:/var/lib/mysql mysql:5.7 
+
+3. bring up ghost container
+docker container run -d --network ghost-net --name ghost-blog -p 9898:2368 -e database__client=mysql -e database__connection__host=ghost-db -e database__connection__user=root -e database__connection__password=welcome -e database__connection__database=ghost ghost:1-alpine
