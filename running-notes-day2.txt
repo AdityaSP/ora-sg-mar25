@@ -1747,3 +1747,149 @@ round-trip min/avg/max = 0.091/0.112/0.133 ms
 root@dockertest:/var/lib/docker/image# docker container exec w2 ping -c2 w1
 ping: bad address 'w1'
 root@dockertest:/var/lib/docker/image#
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+root@dockertest:/var/lib/docker/image# docker container run -d --network w1-db-net --name w3 al-ap:6
+809b55059f94e929aac48630a09b2c31c8b44b4237b8851d83d028039ebca3b8
+root@dockertest:/var/lib/docker/image# docker container inspect w6 | grep -i ipaddress
+Error: No such container: w6
+root@dockertest:/var/lib/docker/image# docker container inspect w3 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.4",
+root@dockertest:/var/lib/docker/image# docker container run -d --network w1-db-net --ipaddress 172.19.0.5 --name w4 al-ap:6
+unknown flag: --ipaddress
+See 'docker container run --help'.
+root@dockertest:/var/lib/docker/image# docker container run --help | grep -i ip
+      --add-host list                         Add a custom host-to-IP mapping (host:ip) (default [])
+      --disable-content-trust                 Skip image verification (default true)
+      --ip string                             Container IPv4 address (e.g. 172.30.100.104)
+      --ip6 string                            Container IPv6 address (e.g. 2001:db8::33)
+      --ipc string                            IPC namespace to use
+      --link-local-ip list                    Container IPv4/IPv6 link-local addresses (default [])
+root@dockertest:/var/lib/docker/image# docker container run -d --network w1-db-net --ip 172.19.0.5 --name w4 al-ap:6
+11edf4d4819b81319db7cf0b4e613521e2cfc210c94c4c10b1e5cbef5c8d8179
+docker: Error response from daemon: User specified IP address is supported only when connecting to networks with user configured subnets.
+root@dockertest:/var/lib/docker/image# docker network create --subnet 172.21.0.0/16 --gateway 172.21.0.1 myownnet
+958e50307891ae8b12491f12ad52d368b5836fe7bba8eed8d329c32f28a9273f
+root@dockertest:/var/lib/docker/image# docker network inspect myownnet
+[
+    {
+        "Name": "myownnet",
+        "Id": "958e50307891ae8b12491f12ad52d368b5836fe7bba8eed8d329c32f28a9273f",
+        "Created": "2020-03-26T04:06:01.185137372Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.21.0.0/16",
+                    "Gateway": "172.21.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]
+root@dockertest:/var/lib/docker/image# docker container run -d --network myownnet --ip 172.21.0.5 --name w5 al-ap:6
+7f48aca4ff809a4fe807b615cc6d232452965fc354f3a33bcf9f86d726229160
+root@dockertest:/var/lib/docker/image# docker container inspect w5 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.21.0.5",
+root@dockertest:/var/lib/docker/image# docket network ls
+bash: docket: command not found
+root@dockertest:/var/lib/docker/image# docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+55fb23da4021        bridge              bridge              local
+b2ce3f25e09d        docker_gwbridge     bridge              local
+fdcc61c65ce5        host                host                local
+958e50307891        myownnet            bridge              local
+aea69c2b699b        none                null                local
+d36dacd96d98        w1-db-net           bridge              local
+c3717554c270        w2-db-net           bridge              local
+root@dockertest:/var/lib/docker/image# docker image pull ghost:1-alpine
+1-alpine: Pulling from library/ghost
+Digest: sha256:d017a3d1758f11cfe649d2fcc77afbd855f5e838601a0378085174651a096c7c
+Status: Image is up to date for ghost:1-alpine
+root@dockertest:/var/lib/docker/image# docker image history ghost:1-alpine
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+4e080fef0501        2 days ago          /bin/sh -c #(nop)  CMD ["node" "current/in...   0 B
+<missing>           2 days ago          /bin/sh -c #(nop)  EXPOSE 2368                  0 B
+<missing>           2 days ago          /bin/sh -c #(nop)  ENTRYPOINT ["docker-ent...   0 B
+<missing>           2 days ago          /bin/sh -c #(nop) COPY file:f1f79dab1b0ea9...   678 B
+<missing>           2 days ago          /bin/sh -c #(nop)  VOLUME [/var/lib/ghost/...   0 B
+<missing>           2 days ago          /bin/sh -c #(nop) WORKDIR /var/lib/ghost        0 B
+<missing>           2 days ago          /bin/sh -c #(nop)  ENV PATH=/usr/local/sbi...   0 B
+<missing>           2 days ago          /bin/sh -c set -eux;  mkdir -p "$GHOST_INS...   156 MB
+<missing>           2 days ago          /bin/sh -c #(nop)  ENV GHOST_VERSION=1.26.2     0 B
+<missing>           2 days ago          /bin/sh -c #(nop)  ENV GHOST_CONTENT=/var/...   0 B
+<missing>           2 days ago          /bin/sh -c #(nop)  ENV GHOST_INSTALL=/var/...   0 B
+<missing>           2 days ago          /bin/sh -c set -eux;  npm install -g "ghos...   27.2 MB
+<missing>           2 days ago          /bin/sh -c #(nop)  ENV GHOST_CLI_VERSION=1...   0 B
+<missing>           2 days ago          /bin/sh -c #(nop)  ENV NODE_ENV=production      0 B
+<missing>           2 days ago          /bin/sh -c apk add --no-cache   bash            2 MB
+<missing>           2 days ago          /bin/sh -c apk add --no-cache 'su-exec>=0.2'    37.6 kB
+<missing>           2 days ago          /bin/sh -c #(nop)  CMD ["node"]                 0 B
+<missing>           2 days ago          /bin/sh -c #(nop)  ENTRYPOINT ["docker-ent...   0 B
+<missing>           2 days ago          /bin/sh -c #(nop) COPY file:238737301d4730...   116 B
+<missing>           2 days ago          /bin/sh -c apk add --no-cache --virtual .b...   8.33 MB
+<missing>           2 days ago          /bin/sh -c #(nop)  ENV YARN_VERSION=1.21.1      0 B
+<missing>           2 days ago          /bin/sh -c addgroup -g 1000 node     && ad...   69.6 MB
+<missing>           2 days ago          /bin/sh -c #(nop)  ENV NODE_VERSION=10.19.0     0 B
+<missing>           2 days ago          /bin/sh -c #(nop)  CMD ["/bin/sh"]              0 B
+<missing>           2 days ago          /bin/sh -c #(nop) ADD file:0c4555f363c2672...   5.6 MB
+root@dockertest:/var/lib/docker/image#
+root@dockertest:/var/lib/docker/image# cd
+root@dockertest:~# cd /home/vagrant
+root@dockertest:/home/vagrant# vi pinger/Dockerfile
+root@dockertest:/home/vagrant# docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+55fb23da4021        bridge              bridge              local
+b2ce3f25e09d        docker_gwbridge     bridge              local
+fdcc61c65ce5        host                host                local
+958e50307891        myownnet            bridge              local
+aea69c2b699b        none                null                local
+d36dacd96d98        w1-db-net           bridge              local
+c3717554c270        w2-db-net           bridge              local
+root@dockertest:/home/vagrant# docker network rm w1-db-net w2-db-net myownnet
+Error response from daemon: network w1-db-net has active endpoints
+Error response from daemon: network w2-db-net has active endpoints
+Error response from daemon: network myownnet has active endpoints
+root@dockertest:/home/vagrant# docker container rm -f `docker container ls -a | cut -f 1 -d " "`
+7f48aca4ff80
+11edf4d4819b
+809b55059f94
+7c35300f6818
+5bade59b87c1
+fe59f5cce397
+Error response from daemon: No such container: CONTAINER
+root@dockertest:/home/vagrant# docker network rm w1-db-net w2-db-net myownnet
+w1-db-net
+w2-db-net
+myownnet
+root@dockertest:/home/vagrant# docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+55fb23da4021        bridge              bridge              local
+b2ce3f25e09d        docker_gwbridge     bridge              local
+fdcc61c65ce5        host                host                local
+aea69c2b699b        none                null                local
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant# docker network create ghost-net
+ef618c3ed05de3568f0c112e372574382947aace88a106ce1c1501bb5a1dff90
+root@dockertest:/home/vagrant# docker container run -d --network ghost-net --name ghost-db -e MYSQL_ROOT_PASSWORD=welcome -v /tmp/blogdata:/var/lib/mysql mysql:5.7
+ac071bb9540fe5065ea5b9d8b64c2633695497d0c560515b1a2ced5c7dce2d09
+root@dockertest:/home/vagrant# docker container run -d --network ghost-net --name ghost-blog -p 9898:2368 -e database__client=mysql -e database__connection__host=ghost-db -e database__connection__user=root -e database__connection__password=welcome -e database__connection__database=ghost ghost:1-alpine
+83ee7ef181eded2b737d1d9268c52c6da1b465f14e9bd17b6a003976c93be178
+root@dockertest:/home/vagrant#
