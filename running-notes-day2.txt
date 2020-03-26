@@ -1101,3 +1101,649 @@ root@dockertest:/var/lib/docker# cd image
 root@dockertest:/var/lib/docker/image# ls
 aufs
 root@dockertest:/var/lib/docker/image#
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+root@dockertest:/var/lib/docker/image# docker container run -d --name w1 al-ap:6
+fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50
+root@dockertest:/var/lib/docker/image# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+fe59f5cce397        al-ap:6             "/bin/sh -c 'httpd..."   6 seconds ago       Up 5 seconds                            w1
+root@dockertest:/var/lib/docker/image# docker container run -d --name w2 al-ap:6
+5bade59b87c1d71b3094042c817ec4288a5ffff14a0a710ff545c81d4a5cea3b
+root@dockertest:/var/lib/docker/image# docker container run -d --name db al-ap:6
+7c35300f68180d31274f57637d564b0b816607328b4fc06ed200967efe961355
+root@dockertest:/var/lib/docker/image# docker container ls
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+7c35300f6818        al-ap:6             "/bin/sh -c 'httpd..."   5 seconds ago       Up 4 seconds                            db
+5bade59b87c1        al-ap:6             "/bin/sh -c 'httpd..."   8 seconds ago       Up 7 seconds                            w2
+fe59f5cce397        al-ap:6             "/bin/sh -c 'httpd..."   22 seconds ago      Up 21 seconds                           w1
+root@dockertest:/var/lib/docker/image# docker container inspect w1 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.2",
+                    "IPAddress": "172.17.0.2",
+root@dockertest:/var/lib/docker/image# docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.3",
+                    "IPAddress": "172.17.0.3",
+root@dockertest:/var/lib/docker/image# docker container inspect db | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.4",
+                    "IPAddress": "172.17.0.4",
+root@dockertest:/var/lib/docker/image# docker container exec w1 ping -c2 172.17.0.3
+PING 172.17.0.3 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.205 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.112 ms
+
+--- 172.17.0.3 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.112/0.158/0.205 ms
+root@dockertest:/var/lib/docker/image# docker container exec w1 ping -c2 172.17.0.4
+PING 172.17.0.4 (172.17.0.4): 56 data bytes
+64 bytes from 172.17.0.4: seq=0 ttl=64 time=0.195 ms
+64 bytes from 172.17.0.4: seq=1 ttl=64 time=0.177 ms
+
+--- 172.17.0.4 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.177/0.186/0.195 ms
+root@dockertest:/var/lib/docker/image# docker container inspect w1
+[
+    {
+        "Id": "fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50",
+        "Created": "2020-03-26T03:35:10.692333227Z",
+        "Path": "/bin/sh",
+        "Args": [
+            "-c",
+            "httpd -D FOREGROUND"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 11326,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-26T03:35:11.407458026Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:c59084eb5c31c0c582797f3e811c9ce4924c8896e61a05e01b49985d58bcf624",
+        "ResolvConfPath": "/var/lib/docker/containers/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50/hostname",
+        "HostsPath": "/var/lib/docker/containers/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50/hosts",
+        "LogPath": "/var/lib/docker/containers/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50-json.log",
+        "Name": "/w1",
+        "RestartCount": 0,
+        "Driver": "aufs",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        },
+        "GraphDriver": {
+            "Name": "aufs",
+            "Data": null
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "fe59f5cce397",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "/bin/sh",
+                "-c",
+                "httpd -D FOREGROUND"
+            ],
+            "ArgsEscaped": true,
+            "Image": "al-ap:6",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "e43ff9d813aeee9122c10bbb1d367ad237d47a5412918a3fd1e29e3f4b8f9079",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {},
+            "SandboxKey": "/var/run/docker/netns/e43ff9d813ae",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "efc8e252382ebcc0f41a57834e4d2a49d9b5afa84abfbd152beae75856332812",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.2",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:02",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "55fb23da4021d17ac856a358fa7f11f88aef66e07627af806292b606574781cb",
+                    "EndpointID": "efc8e252382ebcc0f41a57834e4d2a49d9b5afa84abfbd152beae75856332812",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02"
+                }
+            }
+        }
+    }
+]
+root@dockertest:/var/lib/docker/image# docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+55fb23da4021        bridge              bridge              local
+b2ce3f25e09d        docker_gwbridge     bridge              local
+fdcc61c65ce5        host                host                local
+aea69c2b699b        none                null                local
+root@dockertest:/var/lib/docker/image# docker network inspect bridge
+[
+    {
+        "Name": "bridge",
+        "Id": "55fb23da4021d17ac856a358fa7f11f88aef66e07627af806292b606574781cb",
+        "Created": "2020-03-26T00:18:54.651834491Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Containers": {
+            "5bade59b87c1d71b3094042c817ec4288a5ffff14a0a710ff545c81d4a5cea3b": {
+                "Name": "w2",
+                "EndpointID": "60961fd3b4e3044d3b1d28acf63c5622250a9b58fb34e4d8fb1dadc1262301a9",
+                "MacAddress": "02:42:ac:11:00:03",
+                "IPv4Address": "172.17.0.3/16",
+                "IPv6Address": ""
+            },
+            "7c35300f68180d31274f57637d564b0b816607328b4fc06ed200967efe961355": {
+                "Name": "db",
+                "EndpointID": "ab711092371f4bf7f4e77d3e4b6496b3c77341c0dbd0f2607ca484baffffd78d",
+                "MacAddress": "02:42:ac:11:00:04",
+                "IPv4Address": "172.17.0.4/16",
+                "IPv6Address": ""
+            },
+            "fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50": {
+                "Name": "w1",
+                "EndpointID": "efc8e252382ebcc0f41a57834e4d2a49d9b5afa84abfbd152beae75856332812",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {
+            "com.docker.network.bridge.default_bridge": "true",
+            "com.docker.network.bridge.enable_icc": "true",
+            "com.docker.network.bridge.enable_ip_masquerade": "true",
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "1500"
+        },
+        "Labels": {}
+    }
+]
+root@dockertest:/var/lib/docker/image#
+root@dockertest:/var/lib/docker/image# docker container inspect w1
+[
+    {
+        "Id": "fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50",
+        "Created": "2020-03-26T03:35:10.692333227Z",
+        "Path": "/bin/sh",
+        "Args": [
+            "-c",
+            "httpd -D FOREGROUND"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 11326,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-26T03:35:11.407458026Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:c59084eb5c31c0c582797f3e811c9ce4924c8896e61a05e01b49985d58bcf624",
+        "ResolvConfPath": "/var/lib/docker/containers/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50/hostname",
+        "HostsPath": "/var/lib/docker/containers/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50/hosts",
+        "LogPath": "/var/lib/docker/containers/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50/fe59f5cce39737796fcd9ff7c326ed69bf6c5b8ce950952f21243f79787fbb50-json.log",
+        "Name": "/w1",
+        "RestartCount": 0,
+        "Driver": "aufs",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": -1,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        },
+        "GraphDriver": {
+            "Name": "aufs",
+            "Data": null
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "fe59f5cce397",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "/bin/sh",
+                "-c",
+                "httpd -D FOREGROUND"
+            ],
+            "ArgsEscaped": true,
+            "Image": "al-ap:6",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "e43ff9d813aeee9122c10bbb1d367ad237d47a5412918a3fd1e29e3f4b8f9079",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {},
+            "SandboxKey": "/var/run/docker/netns/e43ff9d813ae",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "efc8e252382ebcc0f41a57834e4d2a49d9b5afa84abfbd152beae75856332812",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.2",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:02",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "55fb23da4021d17ac856a358fa7f11f88aef66e07627af806292b606574781cb",
+                    "EndpointID": "efc8e252382ebcc0f41a57834e4d2a49d9b5afa84abfbd152beae75856332812",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02"
+                }
+            }
+        }
+    }
+]
+root@dockertest:/var/lib/docker/image# docker container inspect w1 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.2",
+                    "IPAddress": "172.17.0.2",
+root@dockertest:/var/lib/docker/image# docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.3",
+                    "IPAddress": "172.17.0.3",
+root@dockertest:/var/lib/docker/image# docker container inspect db | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.4",
+                    "IPAddress": "172.17.0.4",
+root@dockertest:/var/lib/docker/image# docker network create w1-db-net
+d36dacd96d98cdd8b3febe520ca89ce15df644d0f02007fa4a9f260a8caddf0f
+root@dockertest:/var/lib/docker/image# docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+55fb23da4021        bridge              bridge              local
+b2ce3f25e09d        docker_gwbridge     bridge              local
+fdcc61c65ce5        host                host                local
+aea69c2b699b        none                null                local
+d36dacd96d98        w1-db-net           bridge              local
+root@dockertest:/var/lib/docker/image# docker network inspect w1-db-net
+[
+    {
+        "Name": "w1-db-net",
+        "Id": "d36dacd96d98cdd8b3febe520ca89ce15df644d0f02007fa4a9f260a8caddf0f",
+        "Created": "2020-03-26T03:40:42.020870449Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.19.0.0/16",
+                    "Gateway": "172.19.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]
+root@dockertest:/var/lib/docker/image# docker network disconnect bridge w1
+root@dockertest:/var/lib/docker/image# docker network connect w1-db-net w1
+root@dockertest:/var/lib/docker/image# docker container inspect w1 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.2",
+root@dockertest:/var/lib/docker/image# docker container exec w1 ping -c2 172.17.0.4
+PING 172.17.0.4 (172.17.0.4): 56 data bytes
+^Z
+[1]+  Stopped                 docker container exec w1 ping -c2 172.17.0.4
+root@dockertest:/var/lib/docker/image# docker network disconnect bridge db
+root@dockertest:/var/lib/docker/image# docker network connect w1-db-net db
+root@dockertest:/var/lib/docker/image# docker container inspect db | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.3",
+root@dockertest:/var/lib/docker/image# docker container exec w1 ping -c2 "172.19.0.3"
+PING 172.19.0.3 (172.19.0.3): 56 data bytes
+64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.188 ms
+64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.073 ms
+
+--- 172.19.0.3 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.073/0.130/0.188 ms
+root@dockertest:/var/lib/docker/image# docker network inspect w2-db-net
+[]
+Error: No such network: w2-db-net
+root@dockertest:/var/lib/docker/image# docker network create w2-db-net
+c3717554c2705290d335279ff61e035828121aeb6a633860406cd0d3065548c5
+root@dockertest:/var/lib/docker/image# docker network disconnect bridge w2
+root@dockertest:/var/lib/docker/image# docker network connect w2-db-net w2
+root@dockertest:/var/lib/docker/image# docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.20.0.2",
+root@dockertest:/var/lib/docker/image# docker network inspect w2-db-net
+[
+    {
+        "Name": "w2-db-net",
+        "Id": "c3717554c2705290d335279ff61e035828121aeb6a633860406cd0d3065548c5",
+        "Created": "2020-03-26T03:44:42.547895856Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16",
+                    "Gateway": "172.20.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Containers": {
+            "5bade59b87c1d71b3094042c817ec4288a5ffff14a0a710ff545c81d4a5cea3b": {
+                "Name": "w2",
+                "EndpointID": "fce0bdbca9c789fe25552f19b25775a074e73bb07c6b6ab46d9cb22bed927b8a",
+                "MacAddress": "02:42:ac:14:00:02",
+                "IPv4Address": "172.20.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]
+root@dockertest:/var/lib/docker/image# docker container inspect db | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.3",
+root@dockertest:/var/lib/docker/image# docker network connect w2-db-net db
+root@dockertest:/var/lib/docker/image# docker container inspect db | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.3",
+                    "IPAddress": "172.20.0.3",
+root@dockertest:/var/lib/docker/image# "172.20.0.3"
+bash: 172.20.0.3: command not found
+root@dockertest:/var/lib/docker/image#
+root@dockertest:/var/lib/docker/image#
+root@dockertest:/var/lib/docker/image#
+root@dockertest:/var/lib/docker/image#
+root@dockertest:/var/lib/docker/image#
+root@dockertest:/var/lib/docker/image#
+root@dockertest:/var/lib/docker/image# docker container inspect w1 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.2",
+root@dockertest:/var/lib/docker/image# docker container inspect db | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.3",
+                    "IPAddress": "172.20.0.3",
+root@dockertest:/var/lib/docker/image# docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.20.0.2",
+root@dockertest:/var/lib/docker/image# docker container exec w1 ping -c2 "172.19.0.3"
+PING 172.19.0.3 (172.19.0.3): 56 data bytes
+64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.139 ms
+64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.107 ms
+
+--- 172.19.0.3 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.107/0.123/0.139 ms
+root@dockertest:/var/lib/docker/image# docker container exec w1 ping -c2 db
+PING db (172.19.0.3): 56 data bytes
+64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.057 ms
+64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.072 ms
+
+--- db ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.057/0.064/0.072 ms
+root@dockertest:/var/lib/docker/image# docker container exec w2 ping -c2 db
+PING db (172.20.0.3): 56 data bytes
+64 bytes from 172.20.0.3: seq=0 ttl=64 time=0.091 ms
+64 bytes from 172.20.0.3: seq=1 ttl=64 time=0.133 ms
+
+--- db ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.091/0.112/0.133 ms
+root@dockertest:/var/lib/docker/image# docker container exec w2 ping -c2 w1
+ping: bad address 'w1'
+root@dockertest:/var/lib/docker/image#
