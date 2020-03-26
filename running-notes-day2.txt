@@ -2140,3 +2140,118 @@ Options:
   -w, --workdir string                   Working directory inside the container
 root@dockertest:/home/vagrant#
 root@dockertest:/home/vagrant#
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+root@dockertest:/home/vagrant# vi stack.yml
+root@dockertest:/home/vagrant# cat stack.yml
+version: '3.1'
+
+services:
+
+  ghost:
+    image: ghost:1-alpine
+    restart: always
+    ports:
+      - 8080:2368
+    environment:
+      # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
+      database__client: mysql
+      database__connection__host: db
+      database__connection__user: root
+      database__connection__password: example
+      database__connection__database: ghost
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+root@dockertest:/home/vagrant# docker stack deploy -c stack.yml ghost
+Ignoring unsupported options: restart
+
+Creating network ghost_default
+Creating service ghost_ghost
+Creating service ghost_db
+root@dockertest:/home/vagrant# docker service ls
+ID            NAME         MODE        REPLICAS  IMAGE
+6fiwk2zs6v5j  ghost_db     replicated  1/1       mysql:5.7
+e3n7pwiuzprd  ghost_ghost  replicated  0/1       ghost:1-alpine
+root@dockertest:/home/vagrant# docker service ps e3n7pwiuzprd
+ID            NAME               IMAGE           NODE        DESIRED STATE  CURRENT STATE           ERROR                      PORTS
+15qa0jkzciui  ghost_ghost.1      ghost:1-alpine  dockertest  Running        Running 22 seconds ago
+jtj8u6fve2zz   \_ ghost_ghost.1  ghost:1-alpine  dockertest  Shutdown       Failed 28 seconds ago   "task: non-zero exit (1)"
+lui42clvy0h9   \_ ghost_ghost.1  ghost:1-alpine  dockertest  Shutdown       Failed 36 seconds ago   "task: non-zero exit (1)"
+root@dockertest:/home/vagrant# docker service ls
+ID            NAME         MODE        REPLICAS  IMAGE
+6fiwk2zs6v5j  ghost_db     replicated  1/1       mysql:5.7
+e3n7pwiuzprd  ghost_ghost  replicated  1/1       ghost:1-alpine
+root@dockertest:/home/vagrant# docker service update --replicas=2 ghost_ghost
+ghost_ghost
+root@dockertest:/home/vagrant# docker service ls
+ID            NAME         MODE        REPLICAS  IMAGE
+6fiwk2zs6v5j  ghost_db     replicated  1/1       mysql:5.7
+e3n7pwiuzprd  ghost_ghost  replicated  2/2       ghost:1-alpine
+root@dockertest:/home/vagrant# cp stack.yml stack2.yml
+root@dockertest:/home/vagrant# vi stack2.
+root@dockertest:/home/vagrant# vi stack2.yml
+root@dockertest:/home/vagrant# docker stack deploy -c stack2.yml nginx
+Ignoring unsupported options: restart
+
+Creating network nginx_default
+Creating service nginx_mysvc
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant# echo "dslfajowiuerljalkjdf" | docker secret license_key -
+
+Usage:  docker secret COMMAND
+
+Manage Docker secrets
+
+Options:
+      --help   Print usage
+
+Commands:
+  create      Create a secret from a file or STDIN as content
+  inspect     Display detailed information on one or more secrets
+  ls          List secrets
+  rm          Remove one or more secrets
+
+Run 'docker secret COMMAND --help' for more information on a command.
+root@dockertest:/home/vagrant# echo "dslfajowiuerljalkjdf" | docker secret create license_key -
+ucxpgo0pyaxszsl3qowsajj0i
+root@dockertest:/home/vagrant# echo "dslfa" | docker secret^Create license_key -
+root@dockertest:/home/vagrant# docker secret ls
+ID                          NAME                CREATED             UPDATED
+ucxpgo0pyaxszsl3qowsajj0i   license_key         17 seconds ago      17 seconds ago
+wdyi0eszchpchp29kj4w8aj5j   my_secret_data      24 minutes ago      24 minutes ago
+root@dockertest:/home/vagrant# docker secret rm ucxpgo0pyaxszsl3qowsajj0i wdyi0eszchpchp29kj4w8aj5j
+ucxpgo0pyaxszsl3qowsajj0i
+wdyi0eszchpchp29kj4w8aj5j
+root@dockertest:/home/vagrant#
+root@dockertest:/home/vagrant# echo "welcome" | docker secret create license_key -
+cq4ntc5xk613y13asuu4qgilj
+root@dockertest:/home/vagrant# docker secret ls
+ID                          NAME                CREATED             UPDATED
+cq4ntc5xk613y13asuu4qgilj   license_key         5 seconds ago       5 seconds ago
+root@dockertest:/home/vagrant# docker service create --secret license_key nginx:alpine
+n97mfqtkxdd37redrgg241rjp
+root@dockertest:/home/vagrant# docker container ls
+CONTAINER ID        IMAGE                                                                           COMMAND                  CREATED             STATUS              PORTS                 NAMES
+af463748c40b        nginx@sha256:abe5ce652eb78d9c793df34453fddde12bb4d93d9fbf2c363d0992726e4d2cad   "nginx -g 'daemon ..."   6 seconds ago       Up 5 seconds        80/tcp                thirsty_meninsky.1.m3a0ff6vk18gyf3794zsqp2dg
+0b6d7d5e3a97        nginx@sha256:abe5ce652eb78d9c793df34453fddde12bb4d93d9fbf2c363d0992726e4d2cad   "nginx -g 'daemon ..."   4 minutes ago       Up 4 minutes        80/tcp                nginx_mysvc.1.lxffd5ooe9t41hy1dzwitezr1
+0941838cd067        ghost@sha256:d017a3d1758f11cfe649d2fcc77afbd855f5e838601a0378085174651a096c7c   "docker-entrypoint..."   7 minutes ago       Up 7 minutes        2368/tcp              ghost_ghost.2.p2jg634n1yltr6am6ouqjx7rz
+c00b1a81f9c3        ghost@sha256:d017a3d1758f11cfe649d2fcc77afbd855f5e838601a0378085174651a096c7c   "docker-entrypoint..."   8 minutes ago       Up 8 minutes        2368/tcp              ghost_ghost.1.15qa0jkzciui1c5v5g7svxeex
+19ec117dbeca        mysql@sha256:f4a5f5be3d94b4f4d3aef00fbc276ce7c08e62f2e1f28867d930deb73a314c58   "docker-entrypoint..."   8 minutes ago       Up 8 minutes        3306/tcp, 33060/tcp   ghost_db.1.8ckk1mkp64zpxizkjx9uo9fwt
+root@dockertest:/home/vagrant# docker container exec af463748c40b ls /run/secrets
+license_key
+root@dockertest:/home/vagrant# docker container exec af463748c40b cat /run/secrets
+cat: read error: Is a directory
+root@dockertest:/home/vagrant# docker container exec af463748c40b cat /run/secrets/license_key
+welcome
+root@dockertest:/home/vagrant#
