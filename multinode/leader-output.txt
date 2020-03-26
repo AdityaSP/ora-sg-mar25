@@ -1,0 +1,48 @@
+root@dockertest:/home/vagrant# ps -ef | grep dockerd
+root      1228     1  0 00:18 ?        00:02:20 /usr/bin/dockerd -H fd://
+root      3664  9492  0 08:18 pts/1    00:00:00 grep --color=auto dockerd
+root@dockertest:/home/vagrant# docker info | grep -i swarm
+WARNING: No swap limit support
+Swarm: inactive
+root@dockertest:/home/vagrant# docker swarm init
+Error response from daemon: could not choose an IP address to advertise since this system has multiple addresses on different interfaces (10.0.2.15 on eth0 and 192.167.10.75 on eth1) - specify one with --advertise-addr
+root@dockertest:/home/vagrant# docker swarm init --advertise-addr 192.167.10.75
+Swarm initialized: current node (uvqude104r6fsn8eu473hkr0v) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join \
+    --token SWMTKN-1-2j330jd3vcup4kq04u6pktw2quzboucxggdv6d1751r7knso3o-eypqi8dzyzit9yn5pieu0cxi2 \
+    192.167.10.75:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+root@dockertest:/home/vagrant# docker node ls
+ID                           HOSTNAME    STATUS  AVAILABILITY  MANAGER STATUS
+uvqude104r6fsn8eu473hkr0v *  dockertest  Ready   Active        Leader
+root@dockertest:/home/vagrant# docker node ls
+ID                           HOSTNAME     STATUS  AVAILABILITY  MANAGER STATUS
+qote2r9zmfx8g2przvdrw26ij    dockertest2  Ready   Active
+uvqude104r6fsn8eu473hkr0v *  dockertest   Ready   Active        Leader
+root@dockertest:/home/vagrant# docker service create -p 8888:80 --replicas=3 nginx:alpine
+l0a2j3cvdihzlr8ho70qhhhh8
+root@dockertest:/home/vagrant# docker service ls
+ID            NAME          MODE        REPLICAS  IMAGE
+l0a2j3cvdihz  serene_raman  replicated  1/3       nginx:alpine
+root@dockertest:/home/vagrant# docker service ps l0a2j3cvdihz
+ID            NAME            IMAGE         NODE         DESIRED STATE  CURRENT STATE           ERROR  PORTS
+8wtjmhfxha8o  serene_raman.1  nginx:alpine  dockertest   Running        Running 21 seconds ago
+hqu9cgo6bo72  serene_raman.2  nginx:alpine  dockertest2  Running        Running 8 seconds ago
+wsso6p0gzjb5  serene_raman.3  nginx:alpine  dockertest2  Running        Running 8 seconds ago
+root@dockertest:/home/vagrant# docker service ps l0a2j3cvdihz
+ID            NAME            IMAGE         NODE         DESIRED STATE  CURRENT STATE           ERROR  PORTS
+8wtjmhfxha8o  serene_raman.1  nginx:alpine  dockertest   Running        Running 47 seconds ago
+hqu9cgo6bo72  serene_raman.2  nginx:alpine  dockertest2  Running        Running 35 seconds ago
+wsso6p0gzjb5  serene_raman.3  nginx:alpine  dockertest2  Running        Running 34 seconds ago
+root@dockertest:/home/vagrant# docker service update l0a2j3cvdihz --replicas=2
+l0a2j3cvdihz
+root@dockertest:/home/vagrant# docker service ps l0a2j3cvdihz           ID            NAME            IMAGE         NODE         DESIRED STATE  CURRENT STATE               ERROR  PORTS
+8wtjmhfxha8o  serene_raman.1  nginx:alpine  dockertest   Running        Running about a minute ago
+hqu9cgo6bo72  serene_raman.2  nginx:alpine  dockertest2  Running        Running about a minute ago
+root@dockertest:/home/vagrant# vi stack.yml
+root@dockertest:/home/vagrant#
