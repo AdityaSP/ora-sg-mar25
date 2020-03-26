@@ -1,0 +1,31 @@
+to bring up a second node
+In Vagrantfile add the below @29 line number
+
+  config.vm.define "dockertest2" do |dockertest2|
+    dockertest2.vm.box = "bento/ubuntu-16.04"
+    dockertest2.vm.network "private_network", ip: "192.167.10.76"
+	dockertest2.vm.hostname = "dockertest2"
+	dockertest2.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+	  vb.name = "dockertest2"
+      vb.cpus = 2
+      vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
+    end
+	dockertest2.vm.provision "shell", run: "always", inline: <<-SHELL
+      sudo swapoff -a
+      sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+      sudo echo "192.167.10.75 dockertest" >> /etc/hosts
+      sudo echo "192.167.10.76 dockertest2" >> /etc/hosts
+    SHELL
+  end
+
+2. vagrant up -> this will bring up both dockertest and dockertest2
+
+3. dockertest : 192.167.10.75, dockertest2: 192.167.10.76
+
+4. install the same docker on dockertest2
+
+5. on dockertest execute
+"docker swarm init"
+
+6. on dockertest2 execute the join command spit out by docker swarm init
